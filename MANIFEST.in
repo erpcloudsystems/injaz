@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include injaz *.css
+recursive-include injaz *.csv
+recursive-include injaz *.html
+recursive-include injaz *.ico
+recursive-include injaz *.js
+recursive-include injaz *.json
+recursive-include injaz *.md
+recursive-include injaz *.png
+recursive-include injaz *.py
+recursive-include injaz *.svg
+recursive-include injaz *.txt
+recursive-exclude injaz *.pyc
