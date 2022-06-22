@@ -59,7 +59,26 @@ def so_validate(doc, method=None):
     pass
 @frappe.whitelist()
 def so_on_submit(doc, method=None):
-    pass
+    user = frappe.session.user
+    lang = frappe.db.get_value("User", {'name': user}, "language")
+
+    ## Auto Create Project On Submit
+    if doc.auto_create_project_on_submit == "Yes":
+        new_doc2 = frappe.get_doc({
+            "doctype": "Project",
+            "project_name": str(doc.project_name),
+            "customer": doc.customer,
+            "sales_order": doc.name,
+            "status": "Open",
+            "expected_start_date": doc.transaction_date,
+            "priority": "High",
+        })
+        new_doc2.insert(ignore_permissions=True)
+        doc.project = new_doc2.name
+        if lang == "ar":
+            frappe.msgprint("  تم إنشاء مشروع رقم " + new_doc2.name)
+        else:
+            frappe.msgprint(" Project " + new_doc2.name + " Created ")
 @frappe.whitelist()
 def so_on_cancel(doc, method=None):
     pass
@@ -383,7 +402,30 @@ def pr_validate(doc, method=None):
     pass
 @frappe.whitelist()
 def pr_on_submit(doc, method=None):
-    pass
+    new_doc = frappe.get_doc({
+        "doctype": "Purchase Invoice",
+        "posting_date": doc.posting_date,
+        "supplier": doc.supplier,
+
+    })
+    is_items = frappe.db.sql(""" select a.item_code, a.item_name, a.item_group, a.qty, a.uom , a.qty, a.rate
+    		                                                           from `tabPurchase Receipt Item` a join `tabPurchase Receipt` b
+    		                                                           on a.parent = b.name
+    		                                                           where b.name = '{name}'
+    		                                                       """.format(name=doc.name), as_dict=1)
+
+    for c in is_items:
+        items = new_doc.append("items", {})
+        items.item_code = c.item_code
+        items.item_name = c.item_name
+        items.qty = c.qty
+        items.uom = c.uom
+        items.rate = c.rate
+        items.purchase_receipt = doc.name
+
+    new_doc.insert(ignore_permissions=True)
+    frappe.msgprint("  تم إنشاء فاتورة مشتريات بحالة مسودة رقم " + new_doc.name)
+
 @frappe.whitelist()
 def pr_on_cancel(doc, method=None):
     pass
