@@ -426,15 +426,7 @@ doc_events = {
 		"before_cancel": "injaz.doctype_triggers.manufacturing.work_order.work_order.before_cancel",
 		"on_update": "injaz.doctype_triggers.manufacturing.work_order.work_order.on_update",
 	},
-	"Project": {
-		"before_insert": "injaz.doctype_triggers.project.project.before_insert",
-		"after_insert": "injaz.doctype_triggers.project.project.after_insert",
-		"onload": "injaz.doctype_triggers.project.project.onload",
-		"before_validate": "injaz.doctype_triggers.project.project.before_validate",
-		"validate": "injaz.doctype_triggers.project.project.validate",
-		"before_save": "injaz.doctype_triggers.project.project.before_save",
-		"on_update": "injaz.doctype_triggers.project.project.on_update",
-	},
+	
 	"Task": {
 		"before_insert": "injaz.doctype_triggers.projects.task.task.before_insert",
 		"after_insert": "injaz.doctype_triggers.projects.task.task.after_insert",
